@@ -1,0 +1,15 @@
+export const COLORS = {
+    primary: "rgba(74, 222, 128, 1)",
+    secondary: "#FF8C00",
+    tertiary: "#F7F7F7",    
+    background: "#FFFFFF",
+    text: "#000000",
+    textSecondary: "#808080",
+    border: "#E0E0E0",
+    error: "#FF0000",
+    success: "#00FF00",
+    warning: "#FFA500",
+    info: "#0000FF",
+    active:"transparent",
+    surface:"#000000",
+  }as const;
