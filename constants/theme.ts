@@ -12,4 +12,6 @@ export const COLORS = {
     info: "#0000FF",
     active:"transparent",
     surface:"#000000",
+    grey:"#808080",
+    white:"#FFFFFF",
   }as const;

@@ -2,8 +2,8 @@ import { httpRouter } from "convex/server";
 import { httpAction } from "./_generated/server";
 import { Webhook } from "svix";
 import { api } from "./_generated/api";
-import { mutation } from "./_generated/server";
-import {createUser} from "./users";
+
+
 
 const http = httpRouter();
 
@@ -17,60 +17,56 @@ http.route({
       throw new Error("Missing webhook secret environment variable");
     }
 
-    // Headers required for Svix verification
-    const svixId = request.headers.get("svix-id");
-    const svixSig = request.headers.get("svix-signature");
-    const svixTimestamp = request.headers.get("svix-timestamp");
+    // Log and inspect all headers
+    const headers = Object.fromEntries(request.headers.entries());
+    console.log("📩 Incoming webhook headers:", headers);
 
-    if (!svixId || !svixSig || !svixTimestamp) {
+    // Extract headers exactly as Clerk sends them
+    const svix_id = headers["svix-id"];
+    const svix_signature = headers["svix-signature"];
+    const svix_timestamp = headers["svix-timestamp"];
+
+    if (!svix_id || !svix_signature || !svix_timestamp) {
+      console.error("❌ Missing Svix headers:", { svix_id, svix_signature, svix_timestamp });
       return new Response("Missing Svix headers", { status: 400 });
     }
 
-    // Get and stringify request body
-    const payload = await request.json();
-    const body = JSON.stringify(payload);
+    // Get raw body text (needed for Svix signature verification)
+    const body = await request.text();
+    console.log("📝 Raw body:", body);
 
-    // Verify the webhook signature
-    const webhook = new Webhook(webhookSecret);
+    const wh = new Webhook(webhookSecret);
     let event: any;
 
     try {
-      event = webhook.verify(body, {
-        svix_id: svixId,
-        svix_timestamp: svixTimestamp,
-        svix_signature: svixSig,
-      }) as any;
+      event = wh.verify(body, {
+        "svix-id": svix_id,
+        "svix-timestamp": svix_timestamp,
+        "svix-signature": svix_signature,
+      });
     } catch (error) {
-      console.error("Webhook verification failed:", error);
+      console.error("❌ Webhook verification failed:", error);
       return new Response("Invalid signature", { status: 400 });
     }
 
-    const eventType = event.type;
+    console.log("✅ Webhook verified:", event.type);
 
-    // Handle user.created event
-    if (eventType === "user.created") {
-      const { id: clerkId, email_address, first_name, last_name, image_url } = event.data;
-
-      const email = email_address?.[0]?.email_address || "";
+    if (event.type === "user.created") {
+      const { id, email_addresses, first_name, last_name, image_url } = event.data;
+      const email = email_addresses[0].email_address;
       const name = `${first_name || ""} ${last_name || ""}`.trim();
-
-      if (!email) {
-        console.error("Email address missing in event data.");
-        return new Response("Invalid user data", { status: 400 });
-      }
-
-      console.log("Creating user in Convex:", { email, name, image_url, clerkId });
 
       try {
         await ctx.runMutation(api.users.createUser, {
-            username: email.split("@")[0],
-            fullname: name,
-            image: image_url,
-            email,
-            clerkId,
-          });
+          username: email.split("@")[0],
+          fullname: name,
+          image: image_url,
+          email,
+          clerkId: id,
+        });
+        console.log("👤 User created in Convex:", email);
       } catch (error) {
-        console.error("Error creating user in Convex:", error);
+        console.error("❌ Error creating user in Convex:", error);
         return new Response("Error creating user", { status: 500 });
       }
     }

@@ -16,7 +16,7 @@ export default defineSchema({
     posts:defineTable({
      userId:v.id("users"),
      imageurl:v.string(),
-     storageId:v.id("storage"),//needed for deleting the image from storage
+     storageId:v.id("_storage"),//needed for deleting the image from storage
         caption:v.optional(v.string()),
         likes:v.number(),
         comments:v.number(),
