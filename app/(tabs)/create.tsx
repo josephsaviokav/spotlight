@@ -6,9 +6,14 @@ import { useUser } from '@clerk/clerk-expo';
 import { styles } from '../../styles/create.styles';
 import { COLORS } from '@/constants/theme';
 import * as ImagePicker from 'expo-image-picker';
-import { ScrollView } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native';
 import {Image} from "expo-image";
 import { TextInput } from 'react-native-gesture-handler';
+import { useMutation } from 'convex/react';
+import { create } from 'react-test-renderer';
+import { HttpMethod } from 'svix/dist/request';
+import {api} from '@/convex/_generated/api';
+import * as FileSystem from 'expo-file-system';
 
 export default function CreateScreen() {
   const router = useRouter();
@@ -28,8 +33,33 @@ export default function CreateScreen() {
     if (!result.canceled) {
       setSelectedImage(result.assets[0].uri);
     }
+  };
+  const generateUploadUrl=useMutation(api.posts.generateUploadUrl)
+ const createPost=useMutation(api.posts.createPost)
+ const handleShare = async () => {
+    if (!selectedImage) return;
+    try {
+      setIsSharing(true);
+      const uploadUrl = await generateUploadUrl();
+     const uploadResult=await FileSystem.uploadAsync(uploadUrl, selectedImage, {
+      httpMethod: "POST",
+      uploadType: FileSystem.FileSystemUploadType.BINARY_CONTENT,
+      mimeType: "image/jpeg",
+    });
+    if (uploadResult.status !== 200) 
+      throw new Error("Failed to upload image");
+    const {storageId}=JSON.parse(uploadResult.body);
+    await createPost({storageId,caption});
+    router.push("/(tabs)");
+
+    
+    }
+    catch (error) {
+      console.log("Error uploading image:", error);
+    }finally {
+      setIsSharing(false);
+    }
   }
- 
   
   if (!selectedImage) {
     return (
@@ -54,7 +84,7 @@ export default function CreateScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS==='ios' ? 100 : 0 }
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
      >
         <View style={styles.contentContainer}>
         <View style={styles.header}>
@@ -68,7 +98,7 @@ export default function CreateScreen() {
             <Ionicons
             name='arrow-back'
             size={28}
-            color={isSharing ? COLORS.grey : COLORS.primary}
+            color={isSharing ? COLORS.grey : COLORS.white}
             />
            
         
@@ -77,7 +107,7 @@ export default function CreateScreen() {
             <TouchableOpacity
             style={[styles.shareButton, isSharing && styles.shareButtonDisabled]}
             disabled={isSharing || !selectedImage}
-           // onPress={handleShare}
+            onPress={handleShare}
             >
               {isSharing ? (
                 <ActivityIndicator size="small" color={COLORS.primary} />
