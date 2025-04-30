@@ -43,6 +43,7 @@ export const getFeed = query({
         //get all posts
         const posts=await ctx.db.query("posts").order("desc").collect();
         if(posts.length===0) return []
+        //enhance the posts with the author info and like/bookmark status
         const postsWithInfo=await Promise.all(posts.map(async(post)=>{
             const postAuthor=await ctx.db.get(post.userId);
             const like=await ctx.db.query("likes")

@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
     marginLeft: 18,
     fontSize: 20,
     fontWeight: "bold",
-    color: COLORS.primary,
+    color: COLORS.grey,
   },
   emptyImageContainer: {
 
