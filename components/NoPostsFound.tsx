@@ -9,7 +9,7 @@ export function NoPostsFound() {
           flex:1,
           justifyContent:"center",
           alignItems:"center",
-          backgroundColor:"Black",
+          backgroundColor:"black",
         }}>
           <Text style={{fontSize:20,color:"white"}}>No Posts Found</Text>
           </View>

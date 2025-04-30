@@ -45,7 +45,7 @@ export const getFeed = query({
         if(posts.length===0) return []
         //enhance the posts with the author info and like/bookmark status
         const postsWithInfo=await Promise.all(posts.map(async(post)=>{
-            const postAuthor=await ctx.db.get(post.userId);
+            const postAuthor= (await ctx.db.get(post.userId))!;
             const like=await ctx.db.query("likes")
             .withIndex("by_user_and_post", (q) => q.eq("userId", currentUser._id).eq("postId", post._id)).first()
             const bookmark=await ctx.db.query("bookmarks")
@@ -67,5 +67,47 @@ export const getFeed = query({
 
 
       
+    },
+});
+export const toggleLike = mutation({
+    args:{
+        postId:v.id("posts"),
+    },
+    handler: async (ctx,args)=>{
+        const currentUser =await getAuthenticatedUser(ctx);
+        const existing=await ctx.db.query("likes")
+        .withIndex("by_user_and_post", (q) => q.eq("userId", currentUser._id).eq("postId", args.postId)).first()
+  const post=await ctx.db.get(args.postId);
+if(!post) throw new Error("Post not found");
+if(existing){
+    //delete the like
+    await ctx.db.delete(existing._id);
+    await ctx.db.patch(post._id,{
+        likes:post.likes-1,
+    });
+    return false;
+}
+    else{
+        //create the like
+        await ctx.db.insert("likes",{
+            userId:currentUser._id,
+            postId:post._id,
+        });
+        await ctx.db.patch(post._id,{
+            likes:post.likes+1,
+        })
+        if (currentUser._id !== post.userId) {
+            await ctx.db.insert("Notifications", {
+                receiverId: post.userId,
+                type: "like",
+                senderId: currentUser._id,
+                postId: args.postId,
+            });
+        }
+        return true;//return the like status
+
+    }
+
+
     },
 });

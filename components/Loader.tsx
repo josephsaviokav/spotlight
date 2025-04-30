@@ -9,7 +9,7 @@ export  function Loader() {
         flex:1,
         justifyContent:"center",
         alignItems:"center",
-        backgroundColor:"Black",
+        backgroundColor:"black",
 
 
   
