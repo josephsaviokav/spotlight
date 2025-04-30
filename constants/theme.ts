@@ -1,8 +1,8 @@
 export const COLORS = {
-    primary: "rgba(74, 222, 128, 1)",
+    primary: "rgb(117, 121, 118)",
     secondary: "#FF8C00",
     tertiary: "#F7F7F7",    
-    background: "#FFFFFF",
+    background: "black",
     text: "#000000",
     textSecondary: "#808080",
     border: "#E0E0E0",

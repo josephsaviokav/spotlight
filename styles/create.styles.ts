@@ -7,56 +7,39 @@ const { width } = Dimensions.get("window");
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor: "black",
   },
-  contentContainer: {
-    flex: 1,
-  },
+  
+    contentContainer: {
+     flex: 1,
+    },
+    
+ 
   header: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-    borderBottomColor: COLORS.surface,
+    alignItems: "center",
+    padding: 16,
+
   },
   headerTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: COLORS.white,
-  },
-  contentDisabled: {
-    opacity: 0.7,
-  },
-  shareButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    minWidth: 60,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  shareButtonDisabled: {
-    opacity: 0.5,
-  },
-  shareText: {
+    marginLeft: 18,
+    fontSize: 20,
+    fontWeight: "bold",
     color: COLORS.primary,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  shareTextDisabled: {
-    color: COLORS.grey,
   },
   emptyImageContainer: {
-    flex: 1,
+
     justifyContent: "center",
     alignItems: "center",
-    gap: 12,
+    flex: 1,
   },
   emptyImageText: {
-    color: COLORS.grey,
+    marginTop: 12,
     fontSize: 16,
+    color: COLORS.grey,
   },
+  
   content: {
     flex: 1,
   },
@@ -110,5 +93,23 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     paddingTop: 8,
     minHeight: 40,
+  },
+  shareButton: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    minWidth: 60,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  shareButtonDisabled: {
+    opacity: 0.5,
+  },
+  shareText: {
+    color: COLORS.primary,
+    fontSize: 16,
+    fontWeight: "600",
+  },
+  contentDisabled: {
+    opacity: 0.7,
   },
 });
