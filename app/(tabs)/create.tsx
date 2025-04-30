@@ -8,6 +8,7 @@ import { COLORS } from '@/constants/theme';
 import * as ImagePicker from 'expo-image-picker';
 import { ScrollView } from 'react-native-gesture-handler';
 import {Image} from "expo-image";
+import { TextInput } from 'react-native-gesture-handler';
 
 export default function CreateScreen() {
   const router = useRouter();
@@ -53,7 +54,8 @@ export default function CreateScreen() {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
-      keyboardVerticalOffset={Platform.OS==='ios' ? 20 : 0}>
+      keyboardVerticalOffset={Platform.OS==='ios' ? 100 : 0 }
+     >
         <View style={styles.contentContainer}>
         <View style={styles.header}>
           <TouchableOpacity
@@ -88,10 +90,12 @@ export default function CreateScreen() {
            contentContainerStyle={styles.scrollContent}
             bounces={false}
             keyboardShouldPersistTaps="handled"
+            contentOffset={{ x: 0, y: 100 }}
             >
               <View
               style={[styles.content, isSharing && styles.contentDisabled]}
               >
+                {/*Image Section*/}
                 <View style={styles.imageSection}>
                 <Image
                 source={{ uri: selectedImage }}
@@ -112,6 +116,27 @@ export default function CreateScreen() {
                 </TouchableOpacity>
 
               </View>
+              {/*Caption Section*/}
+              <View style={styles.inputSection}>
+                <View style={styles.captionContainer}>
+                  <Image
+                  source={user?.imageUrl}
+                  style={styles.userAvatar}
+                  contentFit='cover'
+                  transition={200}
+                  />
+                  <TextInput
+                  style={styles.captionInput}
+                  placeholder="Write a caption..."
+                  placeholderTextColor={COLORS.grey}
+                  multiline
+                  value={caption}
+                  onChangeText={setCaption}
+                  editable={!isSharing}
+                  />
+                  </View>
+                  </View>
+
               </View>
 
            </ScrollView>
