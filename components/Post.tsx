@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import CommentsModel from "./CommentsModel";
+import {formatDistanceToNow} from 'date-fns';
 //todo:add the actual type
 type postProps={
     post:{
@@ -109,7 +110,10 @@ export default function Post({post}:postProps) {
                     View all {post.comments} comments</Text>
             </TouchableOpacity> */}
             {/*Post Date */}
-            <Text style={styles.timeAgo}>2 days ago</Text>
+            <Text style={styles.timeAgo}>
+            {formatDistanceToNow(post._creationTime, {addSuffix: true})}
+        </Text>
+           
             {/*Post Comments */}
         </View>
         <CommentsModel
