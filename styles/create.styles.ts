@@ -1,13 +1,14 @@
 // styles/create.styles.ts
 import { StyleSheet, Dimensions } from "react-native";
 import { COLORS } from "@/constants/theme";
-
+import { Platform } from "react-native";
 const { width } = Dimensions.get("window");
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+    marginBottom: Platform.OS === "ios" ? 44 : 0,
   
   },
   

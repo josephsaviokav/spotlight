@@ -7,6 +7,7 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import CommentsModel from "./CommentsModel";
 //todo:add the actual type
 type postProps={
     post:{
@@ -29,6 +30,8 @@ type postProps={
 export default function Post({post}:postProps) {
   const [isLiked,setIsLiked]=useState(post.isLiked);
   const [likesCount,setLikesCount]=useState(post.likes);
+  const [commentsCount,setCommentsCount]=useState(post.comments);
+  const [showcomments,setShowComments]=useState(false);
   const toggleLike=useMutation(api.posts.toggleLike);
   const handleLike=async()=>{
     try {
@@ -78,7 +81,7 @@ export default function Post({post}:postProps) {
                 <Ionicons name={isLiked?"heart":"heart-outline"} size={24} color={isLiked?"red":"grey"}  />
                 <Text style={styles.likesText}>{post.likes}</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{flexDirection:"row",alignItems:"center",gap:3}}>
+                <TouchableOpacity style={{flexDirection:"row",alignItems:"center",gap:3}} onPress={()=>setShowComments(true)}>
                 <Ionicons name="chatbubble-outline" size={24} color="grey" />
                 <Text style={styles.commentText}>
                 {post.comments} </Text>
@@ -109,6 +112,17 @@ export default function Post({post}:postProps) {
             <Text style={styles.timeAgo}>2 days ago</Text>
             {/*Post Comments */}
         </View>
+        <CommentsModel
+        postId={post._id}
+        visible={showcomments}
+        onClose={() => setShowComments(false)}
+        onCommentAdded={() => {
+            setCommentsCount((prev) => prev + 1);
+        }}
+        />
+           
+        
+
         </View>
   )
 }

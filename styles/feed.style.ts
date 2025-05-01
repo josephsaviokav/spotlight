@@ -153,7 +153,7 @@ export const styles = StyleSheet.create({
     borderBottomColor: COLORS.surface,
   },
   modalTitle: {
-    color: COLORS.white,
+    color: COLORS.grey,
     fontSize: 16,
     fontWeight: "600",
   },
@@ -211,7 +211,7 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
   postButton: {
-    color: COLORS.primary,
+    color: COLORS.grey,
     fontWeight: "600",
     fontSize: 14,
   },
