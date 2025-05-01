@@ -110,7 +110,7 @@ export default function CreateScreen() {
             onPress={handleShare}
             >
               {isSharing ? (
-                <ActivityIndicator size="small" color={COLORS.primary} />
+                <ActivityIndicator size="small" color={COLORS.grey} />
               ) : (
                 <Text style={styles.shareText}>Share</Text>
               )}
@@ -141,7 +141,7 @@ export default function CreateScreen() {
                   <Ionicons
                   name='image-outline'
                   size={20}
-                  color={COLORS.primary}/>
+                  color={COLORS.grey}/>
                   <Text style={styles.changeImageText}>Change Image</Text>
                 </TouchableOpacity>
 

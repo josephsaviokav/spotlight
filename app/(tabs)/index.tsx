@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Loader } from "@/components/Loader";
-import { ScrollView } from "react-native-gesture-handler";
+import { FlatList, ScrollView } from "react-native";
 import { NoPostsFound } from "@/components/NoPostsFound";
 import  Post  from "@/components/Post";
 export default function Index() {
@@ -25,6 +25,20 @@ export default function Index() {
           <Ionicons name="log-out-outline" size={28} color="grey" />
         </TouchableOpacity>
         </View>
+        
+        <FlatList 
+        data={posts}
+        renderItem={({item})=>
+          <Post post={{ ...item, caption: item.caption || '' }} />
+      }
+        keyExtractor={(item) => item._id}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingBottom: 60,
+        }}/>
+        
+     
+        {/*         
         <ScrollView showsVertical-ScrollIndicator={false} 
         contentContainerStyle={{
           paddingBottom: 60}}>
@@ -33,7 +47,7 @@ export default function Index() {
   <Post key={post._id} post={{ ...post, caption: post.caption || '' }} />
 ))}
 
-        </ScrollView>
+        </ScrollView> */}
       
     </View>
   );

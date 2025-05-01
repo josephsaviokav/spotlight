@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
     opacity: 0.5,
   },
   shareText: {
-    color: COLORS.primary,
+    color: COLORS.grey,
     fontSize: 16,
     fontWeight: "600",
   },
