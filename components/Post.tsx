@@ -33,7 +33,9 @@ export default function Post({post}:postProps) {
   const [likesCount,setLikesCount]=useState(post.likes);
   const [commentsCount,setCommentsCount]=useState(post.comments);
   const [showcomments,setShowComments]=useState(false);
+  const [isBookmarked,setIsBookmarked]=useState(post.isBookmarked);
   const toggleLike=useMutation(api.posts.toggleLike);
+    const toggleBookmark=useMutation(api.bookmarks.toggleBookmark);
   const handleLike=async()=>{
     try {
      const newIsLiked=   await toggleLike({postId:post._id});
@@ -43,7 +45,11 @@ export default function Post({post}:postProps) {
 
   }
 }
+const handleBookmark=async()=>{
+   const newIsBookmarked= await toggleBookmark({postId:post._id});
+    setIsBookmarked(newIsBookmarked);
 
+}
   return (
     <View style={styles.post}>
         {/*Post Header */}
@@ -62,10 +68,8 @@ export default function Post({post}:postProps) {
 
           </Link>
           {/*todo:fix it later*/}
-          <TouchableOpacity >
-            <Ionicons name="trash-outline" size={24} color="grey" />
-            </TouchableOpacity>
-          
+          <TouchableOpacity></TouchableOpacity>
+         
         </View>
         {/*Post Image */}
         <Image
@@ -91,8 +95,8 @@ export default function Post({post}:postProps) {
                 <Ionicons name="paper-plane-outline" size={24} color="grey" />
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-                <Ionicons name="bookmark-outline" size={24} color="grey" />
+            <TouchableOpacity onPress={handleBookmark}>
+                <Ionicons name={isBookmarked?"bookmark":"bookmark-outline"} size={24} color="grey" />
             </TouchableOpacity>
         </View>
         {/*Post Info */}
