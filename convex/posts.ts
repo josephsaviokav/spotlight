@@ -111,3 +111,58 @@ if(existing){
 
     },
 });
+export const deletePost = mutation({
+    args: {
+        postId: v.id("posts"),
+    },
+    handler: async (ctx, args) => {
+        const currentUser = await getAuthenticatedUser(ctx);
+        const post = await ctx.db.get(args.postId);
+        if (!post) throw new Error("Post not found");
+        if (currentUser._id !== post.userId) throw new Error("Unauthorized");
+       //delete likes
+       const likes=await ctx.db.query("likes").withIndex("by_post", (q) => q.eq("postId", args.postId)).collect();
+       for (const like of likes) {
+        await ctx.db.delete(like._id);
+       }
+       //delete bookmarks
+       const bookmarks=await ctx.db.query("bookmarks").withIndex("by_post", (q) => q.eq("postId", args.postId)).collect();
+       for (const bookmark of bookmarks) {
+        await ctx.db.delete(bookmark._id);
+       }
+       //delete comments
+       const comments=await ctx.db.query("comments").withIndex("by_post", (q) => q.eq("postId", args.postId)).collect();
+       for (const comment of comments) {
+        await ctx.db.delete(comment._id);
+       }
+       //delete notifications
+       // Fetch notifications by receiverId and filter by postId
+       const notifications = await ctx.db.query("Notifications")
+         .withIndex("by_receiver", (q) => q.eq("receiverId", post.userId))
+         .collect();
+       for (const notification of notifications) {
+         if (notification.postId === args.postId) {
+           await ctx.db.delete(notification._id);
+         }
+       }
+       //delete post
+        await ctx.db.delete(args.postId);
+        return true;
+    },
+});
+
+export const getPostByUser=query({
+    args: {
+        userId: v.optional(v.id("users")),
+    },
+    handler: async (ctx, args) => {
+
+
+        const user=args.userId?await ctx.db.get(args.userId):await getAuthenticatedUser(ctx); 
+        if (!user) throw new Error("User not found");
+        const posts = await ctx.db.query("posts")
+            .withIndex("by_user", (q) => q.eq("userId", args.userId || user._id))
+            .collect();
+        return posts;
+    },
+});
