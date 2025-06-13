@@ -5,7 +5,7 @@ import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { Id } from "@/convex/_generated/dataModel";
 import { useState } from "react";
-import { useMutation } from "convex/react";
+import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import CommentsModel from "./CommentsModel";
 import {formatDistanceToNow} from 'date-fns';
@@ -36,6 +36,7 @@ export default function Post({post}:postProps) {
   const [isBookmarked,setIsBookmarked]=useState(post.isBookmarked);
   const toggleLike=useMutation(api.posts.toggleLike);
     const toggleBookmark=useMutation(api.bookmarks.toggleBookmark);
+
   const handleLike=async()=>{
     try {
      const newIsLiked=   await toggleLike({postId:post._id});
@@ -54,7 +55,10 @@ const handleBookmark=async()=>{
     <View style={styles.post}>
         {/*Post Header */}
         <View style={styles.postHeader}>
-          <Link href={"/(tabs)/notifications"}>
+          <Link href={
+        `/user/${post.author._id}`  
+        }
+          >
           <TouchableOpacity style={styles.postHeaderLeft}>
             <Image
             source={post.author.image}

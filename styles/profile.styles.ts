@@ -220,7 +220,7 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   noPostsText: {
-    color: COLORS.grey,
+    color: "grey",
     fontSize: 16,
   },
   centered: {
