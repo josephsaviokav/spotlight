@@ -79,7 +79,7 @@ export const styles = StyleSheet.create({
   },
   bio: {
     fontSize: 14,
-    color: COLORS.white,
+    color: "grey",
     lineHeight: 20,
   },
   actionButtons: {
