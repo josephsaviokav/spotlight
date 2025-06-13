@@ -158,14 +158,14 @@ export const styles = StyleSheet.create({
     textAlignVertical: "top",
   },
   saveButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: "rgba(233, 228, 228, 0.15)",
     padding: 16,
     borderRadius: 8,
     alignItems: "center",
     marginTop: 20,
   },
   saveButtonText: {
-    color: COLORS.background,
+    color: "rgba(222, 215, 215, 0.9)",
     fontSize: 16,
     fontWeight: "600",
   },
