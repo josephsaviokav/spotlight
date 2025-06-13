@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView, Platform } from 'react-native'
 import { api } from '@/convex/_generated/api'
 import React, { use } from 'react'
 import { styles } from '../../styles/profile.styles'
@@ -13,6 +13,7 @@ import { Ionicons } from '@expo/vector-icons'
 import { FlatList, ScrollView } from 'react-native-gesture-handler'
 import { Image } from 'expo-image'
 import { Modal } from 'react-native'
+import { TextInput } from 'react-native-gesture-handler'
 
 export default function profile() {
   const {signOut,userId}=useAuth();
@@ -27,6 +28,8 @@ const [selectedPost, setSelectedPost] = useState<Doc<"posts"> | null>(null);
  const posts=useQuery(api.posts.getPostByUser,{});
  const updateProfile=useMutation(api.users.updateProfile);
  const handleSaveProfile = async () => {
+  await updateProfile(editedProfile);
+  setIsEditModalVisible(false);
    
  }
  if(!currentUser || posts===undefined) return <Loader/>
@@ -103,11 +106,53 @@ return (
             
         </ScrollView>
         {/*Edit Modal*/}
+        <Modal 
+        visible={isEditModalVisible}
+        animationType='slide'
+        transparent={true}
+        onRequestClose={() => setIsEditModalVisible(false)}
+        >
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss}>
+        <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.modalContainer}
+        >
+          <View style={styles.modalContent}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Edit Profile</Text>
+              <TouchableOpacity
+                onPress={() => setIsEditModalVisible(false)}
+              >
+                <Ionicons name="close" size={24} color="grey" />
+              </TouchableOpacity>
+              </View>
+              <View style={styles.inputContainer}>
+                <Text style={styles.inputLabel}>Name</Text>
+                  <TextInput
+                  style={styles.input}
+                  value={editedProfile.fullname}
+                  onChangeText={(text) => setEditedProfile((prev) => ({ ...prev, fullname: text }))}
+                  placeholderTextColor={'grey'}
+                  />
+                  </View>
+                  <View style={styles.inputContainer}>
+                        <Text style={styles.inputLabel}>Bio</Text>
+                        <TextInput
+                        style={styles.input}
+                        value={editedProfile.bio}
+                        onChangeText={(text) => setEditedProfile((prev) => ({ ...prev, bio: text }))}
+                        numberOfLines={5}
+                        placeholderTextColor={'grey'}
+                        />
+                        </View>
+                        <TouchableOpacity style={styles.saveButton} onPress={handleSaveProfile}>
+                          <Text style={styles.saveButtonText}>Save</Text>
+                          </TouchableOpacity>
+                          </View>
+                          </KeyboardAvoidingView>
+                          </TouchableWithoutFeedback>
+                          </Modal>
 
-
-
-
-        
         {/*selected Image Modal*/}
         <Modal 
         visible={!!selectedPost}
