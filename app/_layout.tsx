@@ -6,7 +6,11 @@ import { Clerk } from '@clerk/clerk-expo';
 import ClerkAndConvexProvider from '@/providers/ClerkAndConvexProvider';
 import { SplashScreen } from 'expo-router';
 import { useFonts } from 'expo-font';
-import { useCallback } from 'react';
+import { use, useCallback } from 'react';
+import { useEffect } from 'react';
+
+import * as NavgationBar from 'expo-navigation-bar';
+import { Platform } from 'react-native';
 SplashScreen.preventAutoHideAsync();
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -15,6 +19,13 @@ export default function RootLayout() {
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  useEffect(() => {
+    if (Platform.OS === 'android') {
+      NavgationBar.setBackgroundColorAsync('black');
+      NavgationBar.setButtonStyleAsync('light');
     }
   }, [fontsLoaded]);
  

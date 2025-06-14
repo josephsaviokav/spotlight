@@ -51,6 +51,3 @@ Join our community of developers creating universal apps.
 
 
 
-problems to be addressed:
--fix the link problem of user clicking the profile of itself
--The posts of other users are not rendering

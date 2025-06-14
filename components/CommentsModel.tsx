@@ -17,11 +17,11 @@ type CommentsModel={
 postId:Id<"posts">,
 visible:boolean,
 onClose:()=>void,
-onCommentAdded:()=>void,
+
 
 }
 
-    export default function CommentsModel({onClose,visible,postId,onCommentAdded}:CommentsModel) {
+    export default function CommentsModel({onClose,visible,postId}:CommentsModel) {
    const [newcomment,setNewComment]=useState("");
         const comments=useQuery(api.comments.getComments,{postId});
         const addComment=useMutation(api.comments.addComment);
@@ -29,7 +29,7 @@ onCommentAdded:()=>void,
         if(newcomment.trim()==="")return;
        try { await addComment({postId,content:newcomment});
         setNewComment("");
-        onCommentAdded();
+       
         
        }
          catch (error) {

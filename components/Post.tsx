@@ -32,8 +32,8 @@ type postProps={
 
 export default function Post({post}:postProps) {
   const [isLiked,setIsLiked]=useState(post.isLiked);
-  const [likesCount,setLikesCount]=useState(post.likes);
-  const [commentsCount,setCommentsCount]=useState(post.comments);
+
+
   const [showcomments,setShowComments]=useState(false);
   const [isBookmarked,setIsBookmarked]=useState(post.isBookmarked);
   const toggleLike=useMutation(api.posts.toggleLike);
@@ -108,6 +108,10 @@ const handleBookmark=async()=>{
         </View>
         {/*Post Info */}
         <View style={styles.postInfo}>
+          <Text style={styles.likesText}>
+            {post.likes >0 ? `${post.likes.toLocaleString()} likes`:"Be the first to like"}
+            
+            </Text>
             {/* <Text style={styles.likesText}>{post.likes} likes</Text> */}
             {post.caption && (
                 <View style={styles.captionContainer}>
@@ -115,6 +119,12 @@ const handleBookmark=async()=>{
                         {post.author.username}</Text>
                     <Text style={styles.captionText}>{post.caption}</Text>
                 </View>
+            )}
+            {post.comments > 0 && (
+              <TouchableOpacity onPress={() => setShowComments(true)}>
+                <Text style={styles.commentText}>
+                  View all {post.comments} comments</Text>
+              </TouchableOpacity>
             )}
             {/* <TouchableOpacity>
                 <Text style={styles.commentText}>
@@ -131,9 +141,8 @@ const handleBookmark=async()=>{
         postId={post._id}
         visible={showcomments}
         onClose={() => setShowComments(false)}
-        onCommentAdded={() => {
-            setCommentsCount((prev) => prev + 1);
-        }}
+       
+        
         />
            
         
