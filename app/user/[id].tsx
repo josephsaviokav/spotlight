@@ -88,6 +88,7 @@ return (
                 numColumns={5}
                 scrollEnabled={false}
                 renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.gridItem}>
                     <Image
                     source={item.imageurl}
                     style={styles.gridImage}
@@ -95,6 +96,7 @@ return (
                     transition={200}
                     cachePolicy="memory-disk"
                     />
+                    </TouchableOpacity>
                 )}
                 
                 keyExtractor={(item) => item._id}

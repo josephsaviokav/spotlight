@@ -9,6 +9,8 @@ import { useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import CommentsModel from "./CommentsModel";
 import {formatDistanceToNow} from 'date-fns';
+import { getAuthenticatedUser } from "@/convex/users";
+
 //todo:add the actual type
 type postProps={
     post:{
@@ -36,7 +38,7 @@ export default function Post({post}:postProps) {
   const [isBookmarked,setIsBookmarked]=useState(post.isBookmarked);
   const toggleLike=useMutation(api.posts.toggleLike);
     const toggleBookmark=useMutation(api.bookmarks.toggleBookmark);
-
+const currentUser=useQuery(api.users.getUserProfile,{id:post.author._id});
   const handleLike=async()=>{
     try {
      const newIsLiked=   await toggleLike({postId:post._id});
@@ -56,9 +58,10 @@ const handleBookmark=async()=>{
         {/*Post Header */}
         <View style={styles.postHeader}>
           <Link href={
-        `/user/${post.author._id}`  
-        }
-          >
+            currentUser?._id === post.author._id ?
+            "/(tabs)/profile":`/user/${post.author._id}`
+          } asChild>
+          
           <TouchableOpacity style={styles.postHeaderLeft}>
             <Image
             source={post.author.image}
